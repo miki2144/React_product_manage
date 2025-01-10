@@ -26,12 +26,7 @@ const Navbar = () => {
         <Link style={styles.link} to="/login">
           Login
         </Link>
-        <div style={{ marginLeft: "auto", display: "flex" }}>
-          <Link style={styles.link} to="/cart">
-            <FaShoppingCart style={styles.cartIcon} />
-            {cartCount > 0 && <span style={styles.cartCount}>{cartCount}</span>}
-          </Link>
-        </div>
+       
       </div>
       <div style={styles.hamburgerMenu} onClick={toggleMenu}>
         <FaBars style={styles.hamburgerIcon} />

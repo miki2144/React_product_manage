@@ -78,35 +78,49 @@ const ManageUsers = () => {
           {form.id ? "Update" : "Create"}
         </button>
       </form>
-      <ul style={styles.list}>
-        {users.map((user) => (
-          <li key={user.id} style={styles.listItem}>
-            <img
-              src={user.image}
-              alt={user.username}
-              style={styles.userImage}
-            />
-            <div>
-              <h3>{user.fullname}</h3>
-              <p>@{user.username}</p>
-              <p>{user.email}</p>
-            </div>
-            <button onClick={() => handleEdit(user)} style={styles.editButton}>
-              Edit
-            </button>
-            <button onClick={() => handleDelete(user.id)} style={styles.deleteButton}>
-              Delete
-            </button>
-          </li>
-        ))}
-      </ul>
+
+      <table style={styles.table}>
+        <thead>
+          <tr>
+            <th>Image</th>
+            <th>Username</th>
+            <th>Full Name</th>
+            <th>Email</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {users.map((user) => (
+            <tr key={user.id}>
+              <td>
+                <img
+                  src={user.image}
+                  alt={user.username}
+                  style={styles.userImage}
+                />
+              </td>
+              <td>{user.username}</td>
+              <td>{user.fullname}</td>
+              <td>{user.email}</td>
+              <td style={styles.actionButtons}>
+                <button onClick={() => handleEdit(user)} style={styles.editButton}>
+                  Edit
+                </button>
+                <button onClick={() => handleDelete(user.id)} style={styles.deleteButton}>
+                  Delete
+                </button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 };
 
 const styles = {
   container: {
-    maxWidth: "600px",
+    maxWidth: "800px",
     margin: "0 auto",
     padding: "20px",
     textAlign: "center",
@@ -134,22 +148,30 @@ const styles = {
     borderRadius: "5px",
     cursor: "pointer",
   },
-  list: {
-    listStyle: "none",
-    padding: 0,
+  table: {
+    width: "100%",
+    borderCollapse: "collapse",
+    marginTop: "20px",
   },
-  listItem: {
-    display: "flex",
-    gap: "20px",
-    alignItems: "center",
-    marginBottom: "20px",
-    textAlign: "left",
+  th: {
+    padding: "10px",
+    backgroundColor: "#f4f4f4",
+    fontSize: "14px",
+  },
+  td: {
+    padding: "8px",
+    borderBottom: "1px solid #ccc",
+    fontSize: "14px",
   },
   userImage: {
-    width: "80px",
-    height: "80px",
+    width: "40px",
+    height: "40px",
     objectFit: "cover",
     borderRadius: "50%",
+  },
+  actionButtons: {
+    display: "flex",
+    gap: "8px",
   },
   editButton: {
     padding: "5px 10px",

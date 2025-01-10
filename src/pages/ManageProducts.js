@@ -1,105 +1,153 @@
 import React, { useState } from "react";
 
-const ManageUsers = () => {
-  const [users, setUsers] = useState([]);
-  const [form, setForm] = useState({
-    id: "",
-    username: "",
-    fullname: "",
-    email: "",
+const ManageProducts = () => {
+  const [products, setProducts] = useState([]);
+  const [newProduct, setNewProduct] = useState({
+    name: "",
+    price: "",
+    description: "",
     image: "",
   });
+  const [editingProduct, setEditingProduct] = useState(null);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleInputChange = (e) => {
-    if (e.target.name === "image") {
-      setForm({ ...form, image: URL.createObjectURL(e.target.files[0]) });
-    } else {
-      setForm({ ...form, [e.target.name]: e.target.value });
+    setNewProduct({ ...newProduct, [e.target.name]: e.target.value });
+  };
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setNewProduct({ ...newProduct, image: reader.result });
+    };
+    if (file) {
+      reader.readAsDataURL(file);
     }
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (form.id) {
-      setUsers(users.map((user) => (user.id === form.id ? form : user)));
+  const handleCreate = () => {
+    // Check if all required fields are filled
+    if (!newProduct.name || !newProduct.price || !newProduct.image) {
+      setErrorMessage("All fields are required.");
+      return;
     } else {
-      setUsers([...users, { ...form, id: Date.now().toString() }]);
+      setErrorMessage(""); // Clear error message if all fields are filled
     }
-    setForm({ id: "", username: "", fullname: "", email: "", image: "" });
+
+    if (editingProduct) {
+      setProducts(
+        products.map((product) =>
+          product.id === editingProduct.id ? { ...product, ...newProduct } : product
+        )
+      );
+      setEditingProduct(null);
+    } else {
+      setProducts([...products, { id: Date.now(), ...newProduct }]);
+    }
+    setNewProduct({ name: "", price: "", description: "", image: "" });
   };
 
-  const handleEdit = (user) => {
-    setForm(user);
+  const handleEdit = (product) => {
+    setNewProduct(product);
+    setEditingProduct(product);
   };
 
   const handleDelete = (id) => {
-    setUsers(users.filter((user) => user.id !== id));
+    setProducts(products.filter((product) => product.id !== id));
   };
+
+  const isFormValid = newProduct.name && newProduct.price && newProduct.image;
 
   return (
     <div style={styles.container}>
-      <h2 style={styles.heading}>Manage Users</h2>
-      <form onSubmit={handleSubmit} style={styles.form}>
+      <h2>Manage Products</h2>
+      <form style={styles.form}>
         <input
           type="text"
-          name="username"
-          value={form.username}
+          name="name"
+          placeholder="Product Name"
+          value={newProduct.name}
           onChange={handleInputChange}
-          placeholder="Username"
-          required
           style={styles.input}
+          required
         />
         <input
-          type="text"
-          name="fullname"
-          value={form.fullname}
+          type="number"
+          name="price"
+          placeholder="Price"
+          value={newProduct.price}
           onChange={handleInputChange}
-          placeholder="Full Name"
-          required
           style={styles.input}
+          required
         />
-        <input
-          type="email"
-          name="email"
-          value={form.email}
+        <textarea
+          name="description"
+          placeholder="Description"
+          value={newProduct.description}
           onChange={handleInputChange}
-          placeholder="Email"
-          required
-          style={styles.input}
+          style={styles.textarea}
         />
         <input
           type="file"
           name="image"
-          accept="image/*"
-          onChange={handleInputChange}
+          onChange={handleImageChange}
           style={styles.input}
         />
-        <button type="submit" style={styles.button}>
-          {form.id ? "Update" : "Create"}
+        {errorMessage && <p style={styles.error}>{errorMessage}</p>}
+        <button
+          type="button"
+          onClick={handleCreate}
+          style={styles.button}
+          disabled={!isFormValid} // Disable button if form is not valid
+        >
+          {editingProduct ? "Update Product" : "Add Product"}
         </button>
       </form>
-      <ul style={styles.list}>
-        {users.map((user) => (
-          <li key={user.id} style={styles.listItem}>
-            <img
-              src={user.image}
-              alt={user.username}
-              style={styles.userImage}
-            />
-            <div>
-              <h3>{user.fullname}</h3>
-              <p>@{user.username}</p>
-              <p>{user.email}</p>
-            </div>
-            <button onClick={() => handleEdit(user)} style={styles.editButton}>
-              Edit
-            </button>
-            <button onClick={() => handleDelete(user.id)} style={styles.deleteButton}>
-              Delete
-            </button>
-          </li>
-        ))}
-      </ul>
+
+      <table style={styles.table}>
+        <thead>
+          <tr>
+            <th>Image</th>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Description</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {products.map((product) => (
+            <tr key={product.id}>
+              <td>
+                {product.image && (
+                  <img
+                    src={product.image}
+                    alt={product.name}
+                    style={styles.productImage}
+                  />
+                )}
+              </td>
+              <td>{product.name}</td>
+              <td>${product.price}</td>
+              <td>{product.description}</td>
+              <td style={styles.actionButtons}>
+                <button
+                  onClick={() => handleEdit(product)}
+                  style={styles.editButton}
+                >
+                  Edit
+                </button>
+                <button
+                  onClick={() => handleDelete(product.id)}
+                  style={styles.deleteButton}
+                >
+                  Delete
+                </button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 };
@@ -134,22 +182,25 @@ const styles = {
     borderRadius: "5px",
     cursor: "pointer",
   },
-  list: {
-    listStyle: "none",
-    padding: 0,
+  error: {
+    color: "red",
+    fontSize: "14px",
+    marginTop: "10px",
   },
-  listItem: {
-    display: "flex",
-    gap: "20px",
-    alignItems: "center",
-    marginBottom: "20px",
-    textAlign: "left",
+  table: {
+    width: "100%",
+    borderCollapse: "collapse",
+    marginTop: "20px",
   },
-  userImage: {
-    width: "80px",
-    height: "80px",
+  productImage: {
+    width: "40px", // Smaller image size
+    height: "40px",
     objectFit: "cover",
-    borderRadius: "50%",
+    borderRadius: "5px",
+  },
+  actionButtons: {
+    display: "flex",
+    gap: "8px", // Reduced gap
   },
   editButton: {
     padding: "5px 10px",
@@ -157,6 +208,8 @@ const styles = {
     color: "#fff",
     border: "none",
     borderRadius: "5px",
+    cursor: "pointer",
+    fontSize: "14px",
   },
   deleteButton: {
     padding: "5px 10px",
@@ -164,7 +217,30 @@ const styles = {
     color: "#fff",
     border: "none",
     borderRadius: "5px",
+    cursor: "pointer",
+    fontSize: "14px",
+  },
+  "@media (max-width: 768px)": {
+    container: {
+      padding: "15px", // Reduced padding for mobile
+    },
+    form: {
+      display: "block",
+    },
+    input: {
+      width: "100%",
+    },
+    table: {
+      fontSize: "12px",
+    },
+    actionButtons: {
+      flexDirection: "column",
+    },
+    productImage: {
+      width: "35px", // Smaller image on mobile
+      height: "35px",
+    },
   },
 };
 
-export default ManageUsers;
+export default ManageProducts;

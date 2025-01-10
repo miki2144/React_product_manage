@@ -12,8 +12,8 @@ const Home = () => {
     <div style={styles.container}>
       {/* Hero Section */}
       <div style={styles.heroSection}>
-        <h1 style={styles.heroTitle}>Welcome to Our E-Commerce Store</h1>
-        <p style={styles.heroSubtitle}>Browse our amazing products and enjoy great deals!</p>
+        <h1 style={styles.heroTitle}>Welcome to Our E-Commerce Store BY</h1>
+        <p style={styles.heroSubtitle}>Woldemichael Debesaw!</p>
         <Link to="/products" style={styles.shopNowButton}>Shop Now</Link>
       </div>
 

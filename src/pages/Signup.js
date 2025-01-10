@@ -2,34 +2,39 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const Signup = () => {
-  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [role, setRole] = useState("customer"); // Default role
   const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    // Admin check: You can add an admin password to allow admins to create new users.
     const users = JSON.parse(localStorage.getItem("users")) || [];
-    users.push({ name, email, password });
-    localStorage.setItem("users", JSON.stringify(users));
-
-    alert("Account created successfully! Please log in.");
-    navigate("/login");
+    if (role === "admin" && users.length === 0) {
+      // Allow only one admin to be created (first user)
+      const newUser = { email, password, role };
+      users.push(newUser);
+      localStorage.setItem("users", JSON.stringify(users));
+      alert("Admin created successfully.");
+      navigate("/login");
+    } else if (role === "admin") {
+      alert("Only one admin can be created.");
+    } else {
+      // Regular customer registration
+      const newUser = { email, password, role };
+      users.push(newUser);
+      localStorage.setItem("users", JSON.stringify(users));
+      alert("Account created successfully. Please log in.");
+      navigate("/login");
+    }
   };
 
   return (
     <div style={styles.container}>
-      <h1 style={styles.title}>Signup</h1>
+      <h1 style={styles.title}>Sign Up</h1>
       <form onSubmit={handleSubmit} style={styles.form}>
-        <input
-          type="text"
-          placeholder="Name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          required
-          style={styles.input}
-        />
         <input
           type="email"
           placeholder="Email"
@@ -46,7 +51,15 @@ const Signup = () => {
           required
           style={styles.input}
         />
-        <button type="submit" style={styles.button}>Signup</button>
+        <select
+          value={role}
+          onChange={(e) => setRole(e.target.value)}
+          style={styles.input}
+        >
+          <option value="customer">Customer</option>
+          <option value="admin">Admin</option>
+        </select>
+        <button type="submit" style={styles.button}>Sign Up</button>
       </form>
       <p style={styles.link}>
         Already have an account? <span onClick={() => navigate("/login")} style={styles.linkText}>Login</span>

@@ -1,38 +1,26 @@
 import React from "react";
 import { Link, Outlet } from "react-router-dom";
-import { FaBox, FaUsers, FaUser, FaClipboardList, FaChartLine, FaCreditCard, FaSignOutAlt } from 'react-icons/fa';
+import { FaShoppingCart, FaUserCircle, FaReceipt, FaSignOutAlt } from "react-icons/fa";
 
-const Dashboard = () => {
+const CustomerDashboard = () => {
   const handleLogout = () => {
-    // Clear session storage or token (simulation)
-    sessionStorage.removeItem('userToken');
+    // Add logout logic (e.g., clearing session or token)
     alert("Logged out successfully");
-    // Redirect to login or home page (if needed)
-    window.location.href = "/login"; // Change as necessary
   };
 
   return (
     <div style={styles.container}>
       <aside style={styles.sidebar}>
-        <h2 style={styles.sidebarTitle}>Admin Dashboard</h2>
+        <h2 style={styles.sidebarTitle}>Customer Dashboard</h2>
         <nav style={styles.nav}>
-          <Link style={styles.link} to="/dashboard/products">
-            <FaBox style={styles.icon} /> Manage Products
+          <Link style={styles.link} to="/customer/cart">
+            <FaShoppingCart style={styles.icon} /> View Cart
           </Link>
-          <Link style={styles.link} to="/dashboard/users">
-            <FaUsers style={styles.icon} /> Manage Users
+          <Link style={styles.link} to="/customer/profile">
+            <FaUserCircle style={styles.icon} /> Manage Profile
           </Link>
-          <Link style={styles.link} to="/dashboard/profile">
-            <FaUser style={styles.icon} /> Profile Management
-          </Link>
-          <Link style={styles.link} to="/dashboard/orders">
-            <FaClipboardList style={styles.icon} /> Manage Orders
-          </Link>
-          <Link style={styles.link} to="/dashboard/reports">
-            <FaChartLine style={styles.icon} /> View Reports
-          </Link>
-          <Link style={styles.link} to="/dashboard/payments">
-            <FaCreditCard style={styles.icon} /> Payment Management
+          <Link style={styles.link} to="/customer/orders">
+            <FaReceipt style={styles.icon} /> View Orders
           </Link>
           <button style={styles.logoutButton} onClick={handleLogout}>
             <FaSignOutAlt style={styles.icon} /> Logout
@@ -40,7 +28,7 @@ const Dashboard = () => {
         </nav>
       </aside>
       <main style={styles.mainContent}>
-        <h1 style={styles.pageTitle}>Welcome to Admin Dashboard</h1>
+        <h1 style={styles.pageTitle}>Welcome to Your Dashboard</h1>
         <Outlet />
       </main>
     </div>
@@ -63,8 +51,6 @@ const styles = {
     top: 0,
     bottom: 0,
     left: 0,
-    zIndex: 100,
-    
   },
   sidebarTitle: {
     fontSize: "1.5em",
@@ -113,24 +99,6 @@ const styles = {
     fontSize: "2em",
     marginBottom: "20px",
   },
-
-  // Mobile responsiveness
-  '@media (max-width: 768px)': {
-    container: {
-      flexDirection: "column",
-    },
-    sidebar: {
-      width: "100%",
-      position: "relative",
-      height: "auto",
-    },
-    mainContent: {
-      marginLeft: "0",
-    },
-    link: {
-      fontSize: "14px", // Adjust link font size on small screens
-    },
-  },
 };
 
-export default Dashboard;
+export default CustomerDashboard;
