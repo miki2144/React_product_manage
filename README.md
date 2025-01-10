@@ -68,3 +68,24 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+#####
+Features
+
+Admin Features
+
+Product Management (CRUD): Admins can create, read, update, and delete products.
+
+Order Management: Admins can view and manage user orders.
+
+User Features
+
+Account Management: Users can register, log in, and manage their accounts.
+
+Product Browsing: Users can browse products, add them to their cart, and place orders.
+
+Email Communication: Users receive email notifications (e.g., order confirmations).
+
+Communication
+
+Email Notifications: Order updates and other notifications are sent to users via email. Emails are configured to send to mikidebesaw@gmail.com for system updates.
